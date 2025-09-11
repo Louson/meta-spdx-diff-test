@@ -1,0 +1,57 @@
+From 95ec87559163c7f3aca814932909352967b96347 Mon Sep 17 00:00:00 2001
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Date: Thu, 10 Jul 2025 10:56:05 +0200
+Subject: [PATCH] i2c-tools: add patch
+
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+ ...-tools-i2cget-add-test-preprocesseur.patch | 24 +++++++++++++++++++
+ .../i2c-tools/i2c-tools_%.bbappend            |  5 ++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 recipes-devtools/i2c-tools/files/0001-tools-i2cget-add-test-preprocesseur.patch
+ create mode 100644 recipes-devtools/i2c-tools/i2c-tools_%.bbappend
+
+diff --git a/recipes-devtools/i2c-tools/files/0001-tools-i2cget-add-test-preprocesseur.patch b/recipes-devtools/i2c-tools/files/0001-tools-i2cget-add-test-preprocesseur.patch
+new file mode 100644
+index 0000000..7db2881
+--- /dev/null
++++ b/recipes-devtools/i2c-tools/files/0001-tools-i2cget-add-test-preprocesseur.patch
+@@ -0,0 +1,24 @@
++From 06c1d6518b4c662e3c3d11689c9c3ddd36caf4ab Mon Sep 17 00:00:00 2001
++From: kas User <kas@example.com>
++Date: Thu, 10 Jul 2025 08:16:42 +0000
++Subject: [PATCH] tools/i2cget: add test preprocesseur
++
++---
++ tools/i2cget.c | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/tools/i2cget.c b/tools/i2cget.c
++index 38bd44a..2ea3688 100644
++--- a/tools/i2cget.c
+++++ b/tools/i2cget.c
++@@ -36,6 +36,7 @@
++ #include "util.h"
++ #include "../version.h"
++ 
+++#define TEST 1
++ static void help(void) __attribute__ ((noreturn));
++ 
++ static void help(void)
++-- 
++2.48.1
++
+diff --git a/recipes-devtools/i2c-tools/i2c-tools_%.bbappend b/recipes-devtools/i2c-tools/i2c-tools_%.bbappend
+new file mode 100644
+index 0000000..7a8d972
+--- /dev/null
++++ b/recipes-devtools/i2c-tools/i2c-tools_%.bbappend
+@@ -0,0 +1,5 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/files"
++
++SRC_URI += "\
++    file://0001-tools-i2cget-add-test-preprocesseur.patch \
++"
+-- 
+2.43.0
+

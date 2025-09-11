@@ -1,0 +1,9 @@
+header:
+  version: 14
+
+repos:
+  openembedded-core:
+    patches:
+      plain:
+        repo: meta-sbom-diff-test
+        path: kas/patches/0001-i2c-tools-upgrade-4.3-4.4.patch

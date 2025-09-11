@@ -1,0 +1,10 @@
+header:
+  version: 14
+  includes:
+    - base-layers.yml
+    - distro.yml
+    - base.yml
+    - sbom-diff.yml
+
+target:
+ - core-image-minimal

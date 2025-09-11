@@ -1,0 +1,48 @@
+From e4b835e04bce4e3407d0b6e8e85da10d6391823e Mon Sep 17 00:00:00 2001
+From: Wang Mingyu <wangmy@fujitsu.com>
+Date: Fri, 25 Oct 2024 13:39:11 +0800
+Subject: [PATCH] i2c-tools: upgrade 4.3 -> 4.4
+
+Changelog:
+===========
+- tools: Use getopt
+       Implement and document option -h
+- eeprog: Use force option when data comes from a pipe
+- i2cdetect: Display more functionality bits with option -F
+- i2cdump: Remove support for SMBus block mode
+- i2cget: Document SMBus block mode
+       Fix the return code of option -h
+- i2cset: Fix the return code of option -h
+- i2ctransfer: Sort command line options and add to help text
+       Add an option to print binary data
+       Drop redundant variable arg_idx
+- py-smbus: Install in the defined prefix
+	Use setuptools instead of distutils
+
+Signed-off-by: Wang Mingyu <wangmy@fujitsu.com>
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ .../i2c-tools/{i2c-tools_4.3.bb => i2c-tools_4.4.bb}            | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename meta/recipes-devtools/i2c-tools/{i2c-tools_4.3.bb => i2c-tools_4.4.bb} (95%)
+
+diff --git a/meta/recipes-devtools/i2c-tools/i2c-tools_4.3.bb b/meta/recipes-devtools/i2c-tools/i2c-tools_4.4.bb
+similarity index 95%
+rename from meta/recipes-devtools/i2c-tools/i2c-tools_4.3.bb
+rename to meta/recipes-devtools/i2c-tools/i2c-tools_4.4.bb
+index 4e43c51496..f4881f3c2f 100644
+--- a/meta/recipes-devtools/i2c-tools/i2c-tools_4.3.bb
++++ b/meta/recipes-devtools/i2c-tools/i2c-tools_4.4.bb
+@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
+ SRC_URI = "${KERNELORG_MIRROR}/software/utils/i2c-tools/${BP}.tar.gz \
+ "
+ 
+-SRC_URI[sha256sum] = "eec464e42301d93586cbeca3845ed61bff40f560670e5b35baec57301d438148"
++SRC_URI[sha256sum] = "04d1e3b0cd88df8fb96e7709f374dd0b3561191b4c0363eaf873a074b8b7cb22"
+ 
+ inherit update-alternatives
+ 
+-- 
+2.43.0
+

@@ -1,0 +1,9 @@
+header:
+  version: 14
+
+repos:
+  meta-sbom-diff-test:
+    patches:
+      plain:
+        repo: meta-sbom-diff-test
+        path: kas/patches/0001-i2c-tools-add-patch.patch

@@ -1,0 +1,7 @@
+header:
+  version: 14
+
+local_conf_header:
+  kconfig-test2: |
+    SRC_URI:append:pn-linux-yocto = " file://kconfig2.cfg"
+    FILESEXTRAPATHS:prepend:pn-linux-yocto := "${TOPDIR}/../layers/meta-sbom-diff-test/kernel-config/:"

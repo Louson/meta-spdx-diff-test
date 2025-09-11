@@ -1,0 +1,6 @@
+header:
+  version: 14
+
+local_conf_header:
+  images: |
+    PACKAGECONFIG:append:pn-openssl = " no-tls1"

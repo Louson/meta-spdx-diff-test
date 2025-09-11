@@ -1,0 +1,8 @@
+header:
+  version: 14
+
+local_conf_header:
+  images: |
+    # example package to test --ignore-proprietary option
+    IMAGE_INSTALL:append = " i2c-tools example"
+    LICENSE_FLAGS_ACCEPTED .= "commercial "

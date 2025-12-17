@@ -1,5 +1,7 @@
 header:
   version: 14
+  includes:
+    - kas/new-package.yml
 
 repos:
   openembedded-core:

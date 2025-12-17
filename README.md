@@ -44,15 +44,17 @@ Usage
 1. Run your build with KAS using `kas/image-minimal.yml` or other configs:
 
 ```bash
-   $ kas build meta-sbom-diff-test/kas/image-minimal.yml
+$ mkdir layers
+$ git clone https://github.com/bootlin/meta-sbom-diff-test.git layers/meta-sbom-diff-test
+$ kas build layers/meta-sbom-diff-test/kas/image-minimal.yml
 ```
 
 Ex. build with additional packages or custom versions:
 
 ```bash
-   $ kas build \
-        layers/meta-sbom-diff-test/kas/image-minimal.yml:\
-        layers/meta-sbom-diff-test/kas/new-package.yml:\
+$ kas build \
+      layers/meta-sbom-diff-test/kas/image-minimal.yml:\
+      layers/meta-sbom-diff-test/kas/new-package.yml:\
 ```
 
 This will:
@@ -69,29 +71,29 @@ This will:
 
     Example of output after building kas/new-package.yml:
     ```bash
-        $ cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
-        {
-          "package_diff": {
-            "added": {
-              "example": "0.1",
-              "i2c-tools": "4.4"
-            },
-            "removed": {},
-            "changed": {}
-          },
-          "kernel_config_diff": {
-            "added": {},
-            "removed": {},
-            "changed": {}
-          },
-          "packageconfig_diff": {
-            "added": [],
-            "removed": []
-          }
+    $ cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
+    {
+        "package_diff": {
+        "added": {
+            "example": "0.1",
+            "i2c-tools": "4.4"
+        },
+        "removed": {},
+        "changed": {}
+        },
+        "kernel_config_diff": {
+        "added": {},
+        "removed": {},
+        "changed": {}
+        },
+        "packageconfig_diff": {
+        "added": [],
+        "removed": []
         }
+    }
     ```
 
 4. Default reference SPDX file:
 
-  `file://reference-sbom.spdx.json`
-   Can be overridden via `SPDX_REF_FILE` in a bbappend.
+`SPDX_REF_FILE = "https://raw.githubusercontent.com/bootlin/sbom-diff/refs/heads/main/tests/reference-sbom.spdx.json"`  
+Can be overridden via `SPDX_REF_FILE` in a bbappend or a configuration file.

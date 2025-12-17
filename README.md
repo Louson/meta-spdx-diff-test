@@ -11,7 +11,6 @@ Layer Structure
 ```bash
 conf/
     layer.conf                  - Layer configuration
-    reference-sbom.spdx.json     - Default reference SPDX file
 
 kas/
     *.yml                        - KAS build configurations
@@ -31,7 +30,7 @@ Features
 
 1. Generates SPDX 3.0 SBOMs for images.
 2. Computes diffs between new and reference SPDX files.
-3. Includes kernel config, PACKAGECONFIG, and ignored CVEs in the diff.
+3. Includes kernel config and PACKAGECONFIG in the diff.
 
 Defaults
 --------
@@ -42,10 +41,10 @@ Defaults
 Usage
 -----
 
-1. Run your build with KAS using `kas/sbom-diff.yml` or other configs:
+1. Run your build with KAS using `kas/image-minimal.yml` or other configs:
 
 ```bash
-   $ kas build meta-sbom-diff-test/kas/sbom-diff.yml
+   $ kas build meta-sbom-diff-test/kas/image-minimal.yml
 ```
 
 Ex. build with additional packages or custom versions:
@@ -94,5 +93,5 @@ This will:
 
 4. Default reference SPDX file:
 
-  `${DL_DIR}/reference-sbom.spdx.json`
+  `file://reference-sbom.spdx.json`
    Can be overridden via `SPDX_REF_FILE` in a bbappend.

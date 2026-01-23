@@ -1,99 +1,98 @@
-meta-sbom-diff-test
-===================
+# meta-sbom-diff-test
 
-This Yocto layer provides tools and configurations for generating
-SPDX SBOMs (Software Bill of Materials) and computing SPDX diffs
-for images, kernel configs, and PACKAGECONFIG entries.
+Test layer demonstrating sbom-diff with various SBOM change scenarios.
 
-Layer Structure
----------------
+## Structure
 
-```bash
-conf/
-    layer.conf                  - Layer configuration
+- `core-image-minimal.bbappend` - Enables sbom-diff with fixed reference SBOM
+- `kas/image-minimal.yml` - Builds baseline core-image-minimal
+- `kas/*.yml` - Test scenarios that compose with image-minimal.yml
+- `recipes-example/example/` - Demo package for testing
+- `kernel-config/*.cfg` - Kernel configuration test cases
 
-kas/
-    *.yml                        - KAS build configurations
-    patches/                     - Patches for kernel, packages, or OE-core
-    sbom-diff.yml                - KAS config to enable sbom-diff features
+## Test Scenarios
 
-recipes-core/images/
-    core-image-minimal.bbappend  - Inherits sbom-diff class
+### Package Changes
+- `new-package.yml` - Add packages (example, i2c-tools)
+- `new-package-version.yml` - Upgrade i2c-tools (4.3 → 4.4)
+- `new-packageconfig.yml` - Modify package build features
 
-recipes-example/example/
-    example_0.1.bb               - Sample recipe for testing
-    files/                        - License and proprietary binaries
-```
+### Kernel Configuration (Safe)
+- `kernelconfig-y-to-n.yml` - Disable built-in (y → n)
+- `kernelconfig-m-to-n.yml` - Disable module (m → n)
+- `kernelconfig-y-to-m.yml` - Modularize (y → m)
+- `kernelconfig-m-to-y.yml` - Make built-in (m → y)
 
-Features
---------
+### Kernel Configuration (Breaking)
+- `kernelconfig-n-to-y.yml` - Enable feature (n → y)
+- `kernelconfig-n-to-m.yml` - Enable module (n → m)
 
-1. Generates SPDX 3.0 SBOMs for images.
-2. Computes diffs between new and reference SPDX files.
-3. Includes kernel config and PACKAGECONFIG in the diff.
-
-Defaults
---------
-
-- Target MACHINE: `qemux86-64`
-- Default image: `core-image-minimal` (distroless mode)
-
-Usage
------
-
-1. Run your build with KAS using `kas/image-minimal.yml` or other configs:
+## Quick Start
 
 ```bash
-$ mkdir layers
-$ git clone https://github.com/bootlin/meta-sbom-diff-test.git layers/meta-sbom-diff-test
-$ kas build layers/meta-sbom-diff-test/kas/image-minimal.yml
+# Clone
+git clone https://github.com/bootlin/meta-sbom-diff-test layers/meta-sbom-diff-test
+
+# Build baseline
+kas build layers/meta-sbom-diff-test/kas/image-minimal.yml
+
+# Build with changes
+kas build layers/meta-sbom-diff-test/kas/image-minimal.yml:layers/meta-sbom-diff-test/kas/new-package.yml
+
+# View diff
+cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
 ```
 
-Ex. build with additional packages or custom versions:
+## How It Works
+
+1. `core-image-minimal.bbappend` inherits sbom-diff class
+2. Reference SBOM is fetched from:
+   ```
+   https://raw.githubusercontent.com/bootlin/sbom-diff/main/tests/reference-sbom.spdx.json
+   ```
+3. After image build, sbom-diff compares new vs reference
+4. Diff results are deployed with human-readable summary
+
+## Example Output
+
+```
+Packages - Added:
+    + example: 0.1
+    + i2c-tools: 4.3
+
+Packages - Changed:
+    ~ openssl: 3.0.13 -> 3.0.14
+
+Kernel Config - Changed:
+    ~ CONFIG_SECURITY_SELINUX: n -> y
+```
+
+## Test Composition
+
+All scenarios compose with `image-minimal.yml`:
 
 ```bash
-$ kas build \
-      layers/meta-sbom-diff-test/kas/image-minimal.yml:\
-      layers/meta-sbom-diff-test/kas/new-package.yml:\
+# Package tests
+kas build kas/image-minimal.yml:kas/new-package.yml
+kas build kas/image-minimal.yml:kas/new-package-version.yml
+kas build kas/image-minimal.yml:kas/new-packageconfig.yml
+
+# Kernel config tests (safe - no warnings)
+kas build kas/image-minimal.yml:kas/kernelconfig-y-to-n.yml
+kas build kas/image-minimal.yml:kas/kernelconfig-m-to-y.yml
+
+# Kernel config tests (breaking - expect warnings)
+kas build kas/image-minimal.yml:kas/kernelconfig-n-to-y.yml
+kas build kas/image-minimal.yml:kas/kernelconfig-n-to-m.yml
 ```
 
-This will:
-   - Include the `new-package` recipe in the image.
-   - Generate SPDX SBOMs and compute diffs automatically.
+## Requirements
 
-2. The SBOM diff task (`do_sbom_diff`) automatically runs for images
-   that inherit the `sbom-diff` class.
+- [meta-sbom-diff](https://github.com/bootlin/meta-sbom-diff)
+- Scarthgap with OE-Core commit a172a0e8d5 or later
+- KAS build tool
 
-3. Output:
+## Links
 
-   - Timestamped diff files: `<IMAGE_NAME>-<timestamp>.spdx-diff.json`
-   - Latest symlink: `<IMAGE_NAME>.spdx-diff.json`
-
-    Example of output after building kas/new-package.yml:
-    ```bash
-    $ cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
-    {
-        "package_diff": {
-        "added": {
-            "example": "0.1",
-            "i2c-tools": "4.4"
-        },
-        "removed": {},
-        "changed": {}
-        },
-        "kernel_config_diff": {
-        "added": {},
-        "removed": {},
-        "changed": {}
-        },
-        "packageconfig_diff": {
-        "added": [],
-        "removed": []
-        }
-    }
-    ```
-
-4. Default reference SPDX file:
-
-`SPDX_REF_FILE = "https://raw.githubusercontent.com/bootlin/sbom-diff/refs/heads/main/tests/reference-sbom.spdx.json"`  
-Can be overridden via `SPDX_REF_FILE` in a bbappend or a configuration file.
+- sbom-diff tool: https://github.com/bootlin/sbom-diff
+- meta-sbom-diff layer: https://github.com/bootlin/meta-sbom-diff

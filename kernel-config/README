@@ -1,0 +1,42 @@
+# Kernel Configuration Test Cases
+
+Kernel configuration fragments for testing sbom-diff change detection.
+
+## Test Cases
+
+### Safe Changes (No Warnings Expected)
+
+| File | Description | Change Type |
+|------|-------------|-------------|
+| `kconfig1.cfg` | Disable built-in feature | y → n |
+| `kconfig2.cfg` | Disable module | m → n |
+| `kconfig3.cfg` | Convert to module | y → m |
+| `kconfig4.cfg` | Convert to built-in | m → y |
+
+### Breaking Changes (Warnings Expected)
+
+| File | Description | Change Type |
+|------|-------------|-------------|
+| `kconfig5.cfg` | Enable new feature | n → y |
+| `kconfig6.cfg` | Enable new module | n → m |
+
+## Reference
+
+The reference SBOM contains baseline kernel configuration.
+Each fragment modifies specific CONFIG options to test detection.
+
+## Usage
+
+```bash
+# Test safe change
+kas build kas/image-minimal.yml:kas/kernelconfig-y-to-n.yml
+
+# Test breaking change (expect warnings)
+kas build kas/image-minimal.yml:kas/kernelconfig-n-to-y.yml
+
+```
+
+## Validation
+
+Safe changes should complete without warnings.
+Breaking changes (n→y, n→m) should trigger compatibility warnings.

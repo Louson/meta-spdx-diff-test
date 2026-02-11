@@ -1,0 +1,11 @@
+header:
+  version: 14
+  includes:
+    - kas/test-new-package.yml
+
+repos:
+  openembedded-core:
+    patches:
+      update_i2c_tools:
+        repo: meta-recipes-test
+        path: ../kas/patches/0001-i2c-tools-upgrade-4.3-4.4.patch

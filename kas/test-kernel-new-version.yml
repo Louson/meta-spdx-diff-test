@@ -1,0 +1,7 @@
+header:
+  version: 14
+
+local_conf_header:
+  kernel_set_version: |
+    PV:pn-linux-yocto := "6.6.111-2"
+    KERNEL_LOCALVERSION:pn-linux-yocto := "-test2"

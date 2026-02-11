@@ -4,7 +4,6 @@ header:
     - kas/base-layers.yml
     - kas/distro.yml
     - kas/base.yml
-    - kas/sbom-diff.yml
 
 target:
   - core-image-minimal

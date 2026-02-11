@@ -6,38 +6,40 @@ Test layer demonstrating sbom-diff with various SBOM change scenarios.
 
 - `core-image-minimal.bbappend` - Enables sbom-diff with fixed reference SBOM
 - `kas/image-minimal.yml` - Builds baseline core-image-minimal
-- `kas/*.yml` - Test scenarios that compose with image-minimal.yml
-- `recipes-example/example/` - Demo package for testing
+- `kas/sbom-diff.yml` - Enables sbom-diff with fixed reference SBOM by applying
+  `meta-sbom-diff-test/recipes-core/images/core-image-minimal.bbappend`.
+- `kas/test-*.yml` - Test scenarios that compose with image-minimal.yml
+- `meta-recipes-test/` - Demo layer providing packages for testing
 - `kernel-config/*.cfg` - Kernel configuration test cases
 
 ## Test Scenarios
 
 ### Package Changes
-- `new-package.yml` - Add packages (example, i2c-tools)
-- `new-package-version.yml` - Upgrade i2c-tools (4.3 → 4.4)
-- `new-packageconfig.yml` - Modify package build features
 
-### Kernel Configuration (Safe)
-- `kernelconfig-y-to-n.yml` - Disable built-in (y → n)
-- `kernelconfig-m-to-n.yml` - Disable module (m → n)
-- `kernelconfig-y-to-m.yml` - Modularize (y → m)
-- `kernelconfig-m-to-y.yml` - Make built-in (m → y)
+- `test-new-package.yml` - Add packages (example, i2c-tools)
+- `test-new-package-version.yml` - Upgrade i2c-tools (4.3 → 4.4)
+- `test-new-packageconfig.yml` - Modify package build features
 
-### Kernel Configuration (Breaking)
-- `kernelconfig-n-to-y.yml` - Enable feature (n → y)
-- `kernelconfig-n-to-m.yml` - Enable module (n → m)
+### Kernel Configuration
+
+- `test-kernelconfig-n-to-y.yml` - Enable feature (n → y)
+- `test-kernelconfig-n-to-m.yml` - Enable module (n → m)
 
 ## Quick Start
 
 ```bash
 # Clone
-git clone https://github.com/bootlin/meta-sbom-diff-test layers/meta-sbom-diff-test
+git clone https://github.com/bootlin/meta-sbom-diff-test.git meta-sbom-diff-test*
+cd meta-sbom-diff-test
 
 # Build baseline
-kas build layers/meta-sbom-diff-test/kas/image-minimal.yml
+kas build kas/image-minimal.yml
 
 # Build with changes
-kas build layers/meta-sbom-diff-test/kas/image-minimal.yml:layers/meta-sbom-diff-test/kas/new-package.yml
+kas build kas/image-minimal.yml:kas/new-package.yml
+
+# Build with changes and with sbom-diff enabled
+kas build kas/image-minimal.yml:kas/sbom-diff.yml:kas/new-package.yml
 
 # View diff
 cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
@@ -48,7 +50,7 @@ cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootf
 1. `core-image-minimal.bbappend` inherits sbom-diff class
 2. Reference SBOM is fetched from:
    ```
-   https://raw.githubusercontent.com/bootlin/sbom-diff/main/tests/reference-sbom.spdx.json
+   file://${TOPDIR}/../sbom-data/reference-sbom.spdx.json
    ```
 3. After image build, sbom-diff compares new vs reference
 4. Diff results are deployed with human-readable summary
@@ -71,20 +73,7 @@ Kernel Config - Changed:
 
 All scenarios compose with `image-minimal.yml`:
 
-```bash
-# Package tests
-kas build kas/image-minimal.yml:kas/new-package.yml
-kas build kas/image-minimal.yml:kas/new-package-version.yml
-kas build kas/image-minimal.yml:kas/new-packageconfig.yml
-
-# Kernel config tests (safe - no warnings)
-kas build kas/image-minimal.yml:kas/kernelconfig-y-to-n.yml
-kas build kas/image-minimal.yml:kas/kernelconfig-m-to-y.yml
-
-# Kernel config tests (breaking - expect warnings)
-kas build kas/image-minimal.yml:kas/kernelconfig-n-to-y.yml
-kas build kas/image-minimal.yml:kas/kernelconfig-n-to-m.yml
-```
+To generate all test cases, executes: `sbom-data/generate_sboms.sh`
 
 ## Requirements
 

@@ -16,9 +16,12 @@ repos:
     commit: "6988157ad983978ffd6b12bcefedd4deaffdbbd1"
     path: layers/openembedded-core
     patches:
-      fix_spdx:
+      fix_kernel_spdx:
         repo: meta-recipes-test
         path: ../kas/patches/0001-fix-create_kernel_config_spdx.patch
+      fix_packageconfig:
+        repo: meta-recipes-test
+        path: ../kas/patches/0002-exclude-packageconfig-doc.patch
     layers:
       meta:
 

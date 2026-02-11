@@ -1,0 +1,39 @@
+From: "Benjamin Robin (Schneider Electric)" <benjamin.robin@bootlin.com>
+Date: Mon, 09 Feb 2026 17:25:52 +0100
+Subject: [PATCH] spdx30_tasks: Exclude 'doc' when exporting PACKAGECONFIG to SPDX
+
+Currently when generating an SBOM, all packages have the 'doc' feature
+indicated as disabled. This is in fact *not* a feature that was
+declared in the recipe, but instead the documentation of the
+PACKAGECONFIG variable.
+
+But to be safe, if somehow a feature is named 'doc' and enabled, do
+not exclude it when exporting PACKAGECONFIG features to SPDX.
+
+Signed-off-by: Benjamin Robin (Schneider Electric) <benjamin.robin@bootlin.com>
+---
+ meta/lib/oe/spdx30_tasks.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/meta/lib/oe/spdx30_tasks.py b/meta/lib/oe/spdx30_tasks.py
+index 01e7dcbbc686..3515ccd4493d 100644
+--- a/meta/lib/oe/spdx30_tasks.py
++++ b/meta/lib/oe/spdx30_tasks.py
+@@ -824,12 +824,14 @@ def create_spdx(d):
+ 
+     if d.getVar("SPDX_INCLUDE_PACKAGECONFIG", True) != "0":
+         packageconfig = (d.getVar("PACKAGECONFIG") or "").split()
+-        all_features = (d.getVarFlags("PACKAGECONFIG") or {}).keys()
++        all_features = set((d.getVarFlags("PACKAGECONFIG") or {}).keys())
++        blacklisted_features = {"doc"}
+ 
+         if all_features:
+             enabled = set(packageconfig)
+-            all_features_set = set(all_features)
+-            disabled = all_features_set - enabled
++            disabled = all_features - enabled
++            all_features -= disabled & blacklisted_features
++            disabled -= blacklisted_features
+ 
+             for feature in sorted(all_features):
+                 status = "enabled" if feature in enabled else "disabled"

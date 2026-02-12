@@ -36,10 +36,10 @@ cd meta-spdx-diff-test
 kas build kas/image-minimal.yml
 
 # Build with changes
-kas build kas/image-minimal.yml:kas/new-package.yml
+kas build kas/image-minimal.yml:kas/test-new-package.yml
 
 # Build with changes and with spdx-diff enabled
-kas build kas/image-minimal.yml:kas/spdx-diff.yml:kas/new-package.yml
+kas build kas/image-minimal.yml:kas/spdx-diff.yml:kas/test-new-package.yml
 
 # View diff
 cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json

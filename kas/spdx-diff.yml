@@ -1,0 +1,11 @@
+header:
+  version: 14
+
+repos:
+  meta-spdx-diff:
+    url: https://github.com/bootlin/meta-spdx-diff
+    branch: "scarthgap"
+    path: layers/meta-spdx-diff
+
+  meta-spdx-diff-test:
+    path: meta-spdx-diff-test

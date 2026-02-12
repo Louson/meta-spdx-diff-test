@@ -1,6 +1,6 @@
 # Kernel Configuration Test Cases
 
-Kernel configuration fragments for testing sbom-diff change detection.
+Kernel configuration fragments for testing spdx-diff change detection.
 
 ## Test Cases
 

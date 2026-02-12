@@ -1,13 +1,13 @@
-# meta-sbom-diff-test
+# meta-spdx-diff-test
 
-Test layer demonstrating sbom-diff with various SBOM change scenarios.
+Test layer demonstrating spdx-diff with various SBOM change scenarios.
 
 ## Structure
 
-- `core-image-minimal.bbappend` - Enables sbom-diff with fixed reference SBOM
+- `core-image-minimal.bbappend` - Enables spdx-diff with fixed reference SBOM
 - `kas/image-minimal.yml` - Builds baseline core-image-minimal
-- `kas/sbom-diff.yml` - Enables sbom-diff with fixed reference SBOM by applying
-  `meta-sbom-diff-test/recipes-core/images/core-image-minimal.bbappend`.
+- `kas/spdx-diff.yml` - Enables spdx-diff with fixed reference SBOM by applying
+  `meta-spdx-diff-test/recipes-core/images/core-image-minimal.bbappend`.
 - `kas/test-*.yml` - Test scenarios that compose with image-minimal.yml
 - `meta-recipes-test/` - Demo layer providing packages for testing
 - `kernel-config/*.cfg` - Kernel configuration test cases
@@ -29,8 +29,8 @@ Test layer demonstrating sbom-diff with various SBOM change scenarios.
 
 ```bash
 # Clone
-git clone https://github.com/bootlin/meta-sbom-diff-test.git meta-sbom-diff-test*
-cd meta-sbom-diff-test
+git clone https://github.com/bootlin/meta-spdx-diff-test.git meta-spdx-diff-test
+cd meta-spdx-diff-test
 
 # Build baseline
 kas build kas/image-minimal.yml
@@ -38,8 +38,8 @@ kas build kas/image-minimal.yml
 # Build with changes
 kas build kas/image-minimal.yml:kas/new-package.yml
 
-# Build with changes and with sbom-diff enabled
-kas build kas/image-minimal.yml:kas/sbom-diff.yml:kas/new-package.yml
+# Build with changes and with spdx-diff enabled
+kas build kas/image-minimal.yml:kas/spdx-diff.yml:kas/new-package.yml
 
 # View diff
 cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootfs.spdx-diff.json
@@ -47,12 +47,12 @@ cat build/tmp-glibc/deploy/images/qemux86-64/core-image-minimal-qemux86-64.rootf
 
 ## How It Works
 
-1. `core-image-minimal.bbappend` inherits sbom-diff class
+1. `core-image-minimal.bbappend` inherits spdx-diff class
 2. Reference SBOM is fetched from:
    ```
    file://${TOPDIR}/../sbom-data/reference-sbom.spdx.json
    ```
-3. After image build, sbom-diff compares new vs reference
+3. After image build, spdx-diff compares new vs reference
 4. Diff results are deployed with human-readable summary
 
 ## Example Output
@@ -77,11 +77,11 @@ To generate all test cases, executes: `sbom-data/generate_sboms.sh`
 
 ## Requirements
 
-- [meta-sbom-diff](https://github.com/bootlin/meta-sbom-diff)
+- [meta-spdx-diff](https://github.com/bootlin/meta-spdx-diff)
 - Scarthgap with OE-Core commit a172a0e8d5 or later
 - KAS build tool
 
 ## Links
 
-- sbom-diff tool: https://github.com/bootlin/sbom-diff
-- meta-sbom-diff layer: https://github.com/bootlin/meta-sbom-diff
+- spdx-diff tool: https://github.com/bootlin/spdx-diff
+- meta-spdx-diff layer: https://github.com/bootlin/meta-spdx-diff

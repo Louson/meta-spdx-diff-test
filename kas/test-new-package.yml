@@ -6,3 +6,6 @@ local_conf_header:
     # example package to test --ignore-proprietary option
     IMAGE_INSTALL:append = " i2c-tools example"
     LICENSE_FLAGS_ACCEPTED .= "commercial "
+    # packages to test new/old packages are reported but not their packageconfig
+    IMAGE_INSTALL:append = " rsync"
+    IMAGE_INSTALL:remove = " zstd"

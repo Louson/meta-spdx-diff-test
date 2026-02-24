@@ -7,3 +7,7 @@ header:
 
 target:
   - core-image-minimal
+
+local_conf_header:
+  baseimages: |
+    IMAGE_INSTALL:append = " zstd"
